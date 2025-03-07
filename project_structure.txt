@@ -1,0 +1,33 @@
+kucoin-ai-trader/
+├── config/
+│   ├── __init__.py
+│   ├── config.py
+│   └── constants.py
+├── data/
+│   └── historical_data.db
+├── src/
+│   ├── __init__.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── kucoin_client.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── market_analyzer.py
+│   │   ├── position_manager.py
+│   │   └── risk_manager.py
+│   ├── database/
+│   │   ├── __init__.py
+│   │   └── db_manager.py
+│   ├── strategies/
+│   │   ├── __init__.py
+│   │   ├── strategy_evaluator.py
+│   │   └── ml_models.py
+│   └── utils/
+│       ├── __init__.py
+│       └── helpers.py
+├── tests/
+│   ├── __init__.py
+│   └── test_backtesting.py
+├── requirements.txt
+├── main.py
+└── README.md
