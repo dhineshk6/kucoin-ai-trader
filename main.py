@@ -1,4 +1,49 @@
-# Continuing from previous main.py
+import asyncio
+import logging
+from datetime import datetime
+from src.api.kucoin_client import KuCoinClient
+from src.models.market_analyzer import MarketAnalyzer
+from src.models.position_manager import PositionManager
+from src.models.risk_manager import RiskManager
+from src.database.db_manager import DatabaseManager
+from config.config import Config
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+class TradingBot:
+    def __init__(self):
+        self.kucoin = KuCoinClient()
+        self.analyzer = MarketAnalyzer()
+        self.position_manager = PositionManager()
+        self.risk_manager = RiskManager()
+        self.db = DatabaseManager()
+        
+    async def run(self):
+        """Main bot loop"""
+        while True:
+            try:
+                # Get active trading symbols
+                symbols = self.kucoin.get_active_symbols()
+                
+                # Get account balance
+                balance = self.kucoin.get_account_balance()
+                
+                for symbol in symbols:
+                    # Analyze market
+                    analysis = self.analyzer.analyze_market(symbol)
+                    
+                    # Get current positions
+                    positions = self.position_manager.get_positions(symbol)
+                    
+                    if positions:
+                        # Manage existing positions
+                        self.position_manager.manage_positions(
+                            positions, analysis, self.risk_manager
+                        )
+                    else:
+                        # Check for new trading opportunities
+                        if analysis['confidence'] > 0.7:  # High confidence threshold
                             # Calculate position size
                             size = self.risk_manager.calculate_position_size(
                                 balance, analysis, positions
@@ -48,4 +93,3 @@
 
 if __name__ == "__main__":
     bot = TradingBot()
-    asyncio.run(bot.run())
